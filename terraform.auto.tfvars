@@ -1,4 +1,4 @@
-gcp_project = "pcs-demo-322918"
+gcp_project = "gsr-sec-project1"
 gcp_region  = "us-central1"
 
 vpc_name    = "demo-pvc"
