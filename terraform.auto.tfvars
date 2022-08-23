@@ -1,4 +1,4 @@
-gcp_project = "gsr-sec-project1"
+gcp_project = "cloudsecdemo-360320"
 gcp_region  = "us-central1"
 
 vpc_name    = "demo-pvc"
