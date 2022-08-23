@@ -1,13 +1,3 @@
-terraform {
-  cloud {
-    organization = "pcs-nym"
-
-    workspaces {
-      name = "infra-gcp-gke"
-    }
-  }
-}
-
 provider "google" {
   project = var.gcp_project
   region  = var.gcp_region
