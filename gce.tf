@@ -53,15 +53,26 @@ resource "google_compute_instance" "dev" {
     }
   }
 
+  # This is copy the the SSH public Key to enable the SSH Key based authentication
+  metadata = {
+    ssh-keys = "${var.user}:${file(var.publickeypath)}"
+  }
+
+  # to connect to the instance after the creation and execute few commands for provisioning
+  # here you can execute a custom Shell script or Ansible playbook
   provisioner "remote-exec" {
     connection {
       host        = google_compute_address.static.address
       type        = "ssh"
-      user        = var.user
+      # username of the instance would vary for each account refer the OS Login in GCP documentation
+      user        = var.user 
       timeout     = "500s"
+      # private_key being used to connect to the VM. ( the public key was copied earlier using metadata )
       private_key = file(var.privatekeypath)
     }
 
+    # Commands to be executed as the instance gets ready.
+    # installing nginx
     inline = [
       "sudo yum -y install epel-release",
       "sudo yum -y install nginx",
@@ -72,12 +83,11 @@ resource "google_compute_instance" "dev" {
   # Ensure firewall rule is provisioned before server, so that SSH doesn't fail.
   depends_on = [ google_compute_firewall.firewall, google_compute_firewall.webserverrule ]
 
+  # Defining what service account should be used for creating the VM
   service_account {
     email  = var.email
     scopes = ["compute-ro"]
   }
 
-  metadata = {
-    ssh-keys = "${var.user}:${file(var.publickeypath)}"
-  }
+  
 }
